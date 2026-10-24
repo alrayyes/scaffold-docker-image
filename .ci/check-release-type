@@ -12,6 +12,11 @@ set -eu
 # REPLACE: add every file or directory a COPY in the Dockerfile pulls in. The
 # dev tooling in package.json and bun.lock never reaches the image, so it is not
 # logic: use chore(deps): for it, and fix(deps): for a base image bump.
+#
+# Limits: paths are matched as plain root names, so a path with spaces in a COPY
+# would split in the callers' unquoted $(git diff ...). The commit-msg hook sees
+# only staged paths, so a message-only amend passes it; CI checks every commit
+# and the PR title again, which is the check that counts.
 
 IFS= read -r subject || true
 

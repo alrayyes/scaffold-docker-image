@@ -32,6 +32,9 @@ check "perf on a script" fail "perf: faster" scripts/lint-prose.sh
 check "fix on lefthook" fail "fix(hooks): order" lefthook.yml
 check "fix on dev tooling" fail "fix(deps): bump biome" package.json bun.lock
 check "breaking feat on docs" fail "feat!: rewrite" CONTRIBUTING.md
+check "scoped breaking fix on a doc" fail "fix(x)!: rewrite" README.md
+check "fixup is not a fix" pass "fixup! typo" README.md
+check "feature is not a feat" pass "feature: typo" README.md
 check "fix on the Dockerfile" pass "fix(deps): bump alpine" Dockerfile
 check "feat on dockerignore" pass "feat: trim context" .dockerignore
 check "one logic path among docs" pass "fix: package" README.md Dockerfile
