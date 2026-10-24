@@ -34,8 +34,25 @@ Docker to build the image and run hadolint. See [CONTRIBUTING.md](CONTRIBUTING.m
 3. Replace the `Dockerfile`, then the smoke test in `ci.yml` and this README.
 4. Push a `0.1.0` tag on the first commit `main` can reach. Without a baseline
    tag, release-please's first release is `1.0.0` whatever the commits say.
-5. Add the `RELEASE_TOKEN` secret, turn on branch protection, and mark the
-   package public once it exists.
+5. Add the `RELEASE_TOKEN` secret, turn on branch protection, allow
+   auto-merge, allow squash merging only, and mark the package public once it
+   exists.
+
+## Running the image
+
+This repo ships an image and owns no run command, so whoever runs it sets these:
+
+```sh
+docker run --rm \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --read-only \
+  --memory=256m --cpus=1 \
+  ghcr.io/alrayyes/scaffold-docker-image:latest
+```
+
+Add `--cap-add` for a capability the image genuinely needs, and a `--tmpfs`
+mount for any path it must write. Raise the limits to fit.
 
 ## Releasing
 

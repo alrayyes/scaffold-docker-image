@@ -134,7 +134,7 @@ jobs:
       # look fine. Build only - the tag dies with the runner.
       - run: docker build --pull -t scaffold-docker-image:ci .
 
-      # Replace with what the image exists to carry. A package Alpine renames or
+      # REPLACE: add an assertion for what the image exists to carry. A package Alpine renames or
       # drops from the branch still lets `apk add` succeed for the rest, so the build
       # stays green and the failure surfaces in whoever pulls the image. Assert it
       # here, where it is this repo's problem.

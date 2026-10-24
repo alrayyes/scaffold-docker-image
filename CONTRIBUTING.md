@@ -56,7 +56,8 @@ if there is one copy of each:
   staged files, so a half-finished file elsewhere can't fail or be rewritten by
   a commit. It formats them with biome and Prettier and restages what they
   touched, then runs markdownlint, and hadolint on a staged `Dockerfile` (read
-  from the index). It may write, and it never builds the image.
+  from the index). It may write, and it builds the image when the `Dockerfile`
+  is staged.
 - **commit-msg** runs commitlint.
 - **pre-push** runs everything in check mode over the whole tree, including the
   two prose tiers. It never writes: a hook rewriting files under a push leaves
@@ -99,7 +100,7 @@ them:
   Alpine branch the base image is built on rather than to this file, and Alpine
   keeps one build per branch and prunes the rest — so there is no version list
   to read and no archive to pin against. Read that file in full before adding
-  a seventh package.
+  a package.
 - **The base image digest is pinned**, and that is the part that is genuinely
   reproducible. It moves only when someone bumps it by hand and opens a pull
   request.
