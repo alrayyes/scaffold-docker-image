@@ -4,7 +4,6 @@ Alpine
 Dockerfile
 Dependabot
 GitHub
-GHCR
 ghcr\.io
 Prettier
 Contributor Covenant
