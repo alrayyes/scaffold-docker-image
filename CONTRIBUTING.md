@@ -74,6 +74,17 @@ doesn't run as root and carries what it exists to carry. If Alpine renames or
 drops a package, `apk add` still succeeds for the rest and the build stays
 green, so the failure would otherwise turn up in whoever pulls the image.
 
+The same build and smoke test also run every Monday (`scheduled-build.yml`), on
+the default branch, with no push needed. Alpine package versions are unpinned,
+so the package index can change under an unchanged base digest; a red scheduled
+run is that showing up. GitHub emails whoever last edited the schedule, and the
+run is on the Actions tab. The step lives in `.github/actions/build-and-smoke/`
+so this and the pull request build can't drift.
+
+GitHub disables a scheduled workflow in a public repo after 60 days without
+repository activity. A push, or enabling it again on the Actions tab, starts it
+back up.
+
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org/), enforced by

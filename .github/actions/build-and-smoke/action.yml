@@ -1,0 +1,26 @@
+# The image build and its smoke test, in one place so the pull request build in
+# ci.yml and the weekly build in scheduled-build.yml cannot drift apart. The caller
+# checks the repository out first.
+name: Build and smoke test
+description: Builds the image and runs it to check it does what it exists to do.
+
+runs:
+  using: composite
+  steps:
+    # --pull so a base image already on the runner cannot make a broken FROM line
+    # look fine. Build only - the tag dies with the runner.
+    - name: Build the image
+      shell: bash
+      run: docker build --pull -t scaffold-docker-image:ci .
+
+    # REPLACE: add an assertion for what the image exists to carry. A package Alpine renames or
+    # drops from the branch still lets `apk add` succeed for the rest, so the build
+    # stays green and the failure surfaces in whoever pulls the image. Assert it
+    # here, where it is this repo's problem.
+    - name: Check the image runs as non-root and carries what it should
+      shell: bash
+      run: |
+        docker run --rm scaffold-docker-image:ci sh -c '
+          set -eu
+          [ "$(id -u)" != 0 ] || { echo "runs as root"; exit 1; }
+        '

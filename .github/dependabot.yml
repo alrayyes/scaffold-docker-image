@@ -37,7 +37,10 @@ updates:
         update-types: [minor, patch]
 
   - package-ecosystem: github-actions
-    directory: /
+    # The local composite action is scanned too, for any action it later uses.
+    directories:
+      - /
+      - /.github/actions/build-and-smoke
     schedule:
       interval: weekly
       day: monday
