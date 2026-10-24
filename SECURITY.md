@@ -13,7 +13,7 @@ exploit against everything that pulls this image.
 Tell me what you did, what happened, and what you expected. A `Dockerfile` or a
 workflow that reproduces it is worth more than a description of one.
 
-I will acknowledge within a week and tell you what I think, whether or not I
+I acknowledge within a week and tell you what I think, whether or not I
 agree it is a vulnerability. If it is one, the fix ships as a `fix:` commit and
 the advisory is published with the release that carries it.
 

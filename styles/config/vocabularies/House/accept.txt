@@ -2,6 +2,7 @@
 # holds the prose to exactly these, so the casing here is the casing everywhere.
 Alpine
 Dockerfile
+Dependabot
 Forgejo
 GitHub
 GitLab
