@@ -130,17 +130,4 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      # --pull so a base image already on the runner cannot make a broken FROM line
-      # look fine. Build only - the tag dies with the runner.
-      - run: docker build --pull -t scaffold-docker-image:ci .
-
-      # REPLACE: add an assertion for what the image exists to carry. A package Alpine renames or
-      # drops from the branch still lets `apk add` succeed for the rest, so the build
-      # stays green and the failure surfaces in whoever pulls the image. Assert it
-      # here, where it is this repo's problem.
-      - name: Check the image runs as non-root and carries what it should
-        run: |
-          docker run --rm scaffold-docker-image:ci sh -c '
-            set -eu
-            [ "$(id -u)" != 0 ] || { echo "runs as root"; exit 1; }
-          '
+      - uses: ./.github/actions/build-and-smoke

@@ -1,0 +1,26 @@
+# Catches the failure no push triggers. The Dockerfile pins its base image by
+# digest but leaves Alpine package versions to the package index (CONTRIBUTING.md,
+# "Changing the Dockerfile"), so the index can change under an unchanged digest and
+# break `docker build` while nobody is pushing. A weekly build and smoke test finds
+# it within a week instead of at someone's next push.
+#
+# Deliberately only that: no lint, no push, no release. A red run here is the
+# alert; GitHub emails the person who last changed the cron line.
+name: scheduled-build
+
+on:
+  schedule:
+    # Mondays 05:00 UTC. Off the hour so it avoids GitHub's busiest minute.
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/build-and-smoke

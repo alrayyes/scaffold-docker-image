@@ -10,7 +10,8 @@ or clone it, and replace the Dockerfile with the image you mean to ship.
 
 - An Alpine `Dockerfile` on a digest-pinned base, running as a non-root user.
 - hadolint and a plain `docker build` in the hooks and in CI, plus a smoke test
-  that runs the built image.
+  that runs the built image. A weekly scheduled build repeats both, so a base
+  image or package index change that breaks the build shows up within a week.
 - release-please cutting the version from Conventional Commits, then building
   the image, pushing it to `ghcr.io` and attesting its provenance.
 - Dependabot for the base image, the dev tooling and the workflows, with
@@ -30,8 +31,10 @@ Docker to build the image and run hadolint. See [CONTRIBUTING.md](CONTRIBUTING.m
 1. Create the repository from this template.
 2. Search for `scaffold-docker-image` and replace it with the new name: in
    `package.json`, `bun.lock`, the badges here, `SECURITY.md`,
-   `CODE_OF_CONDUCT.md` and the `ci.yml` build step.
-3. Replace the `Dockerfile`, then the smoke test in `ci.yml` and this README.
+   `CODE_OF_CONDUCT.md` and the build action in
+   `.github/actions/build-and-smoke/`.
+3. Replace the `Dockerfile`, then the smoke test in
+   `.github/actions/build-and-smoke/action.yml` and this README.
 4. Push a `0.1.0` tag on the first commit `main` can reach. Without a baseline
    tag, release-please's first release is `1.0.0` whatever the commits say.
 5. Add the `RELEASE_TOKEN` secret, turn on branch protection, allow
