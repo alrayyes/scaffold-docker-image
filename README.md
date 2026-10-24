@@ -64,6 +64,11 @@ on `main` and keeps a release pull request open carrying the next version and
 the changelog entry. Merging it tags the release, and the same run builds the
 image, pushes it and attests it. Tags are bare semver, `0.2.0` and not `v0.2.0`.
 
+Only a change to what the image ships releases: a `feat:`, `fix:` or `perf:`
+commit has to touch the `Dockerfile` or another logic path, and a check on the
+commit and the pull request title fails otherwise. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 A base image bump raises `fix(deps):` on purpose. A patched Alpine has to cut a
 release, or the fix never becomes an image anyone pulls.
 

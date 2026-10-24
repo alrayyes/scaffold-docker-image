@@ -1,0 +1,46 @@
+# commitlint checks the commits inside a pull request and never its title. This
+# repository squash merges, so the title becomes the commit on main and is what
+# release-please reads. A bad title would squash straight past the commits job.
+#
+# Two checks on the title: it is a Conventional Commit, and if it is a feat:, fix:
+# or perf: it touches a logic path (.ci/check-release-type), since a docs-only
+# change typed fix: would otherwise cut an image release.
+name: pr-title
+
+on:
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: .bun-version
+      - run: bun install --frozen-lockfile
+      # The title goes through env, never inline: it is attacker-controlled text.
+      - name: commitlint the title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$PR_TITLE" | bunx commitlint --verbose
+      - name: release type
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # shellcheck disable=SC2046
+          printf '%s\n' "$PR_TITLE" |
+            .ci/check-release-type $(git diff --name-only "${BASE}...${HEAD}")

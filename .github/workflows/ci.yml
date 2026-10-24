@@ -34,6 +34,8 @@ jobs:
       - run: bun run lint
       - run: bun run lint:pkg
       - run: bun run check:biome-schema
+      # The release-type check's own cases; shellcheck ships on the runner.
+      - run: sh .ci/test-check-release-type && shellcheck .ci/*
 
   # Fails only on advisories this change adds to bun.lock over its base
   # (rules/dependencies.md). What is already on main is the scan's to track, in
@@ -114,6 +116,19 @@ jobs:
       # @commitlint/config-conventional as a sibling package.
       - run: bun install --frozen-lockfile
       - run: bunx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      # feat:, fix: and perf: are what cut a release, so each must touch a logic
+      # path (.ci/check-release-type). Merge commits are skipped.
+      - name: release type
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          for sha in $(git rev-list --no-merges "${BASE}..${HEAD}"); do
+            # shellcheck disable=SC2046
+            git log -1 --format=%s "$sha" |
+              .ci/check-release-type $(git diff-tree --no-commit-ids --name-only -r "$sha") ||
+              { echo "commit $sha"; exit 1; }
+          done
 
   dockerfile:
     runs-on: ubuntu-24.04

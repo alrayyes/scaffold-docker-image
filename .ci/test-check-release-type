@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+set -eu
+
+# Cases for .ci/check-release-type: whether a commit type is allowed to touch
+# a given list of paths. Run it directly, no framework.
+
+here=$(cd "$(dirname "$0")" && pwd)
+fail=0
+
+# check <name> <pass|fail> <subject> <paths...>
+check() {
+	name=$1
+	expected=$2
+	subject=$3
+	shift 3
+	if printf '%s\n' "$subject" | "$here/check-release-type" "$@" >/dev/null 2>&1; then
+		got=pass
+	else
+		got=fail
+	fi
+	if [ "$got" = "$expected" ]; then
+		echo "ok   $name"
+	else
+		echo "FAIL $name: expected $expected, got $got"
+		fail=1
+	fi
+}
+
+check "fix on a doc" fail "fix: typo" README.md
+check "feat on CI config" fail "feat: add job" .github/workflows/ci.yml
+check "perf on a script" fail "perf: faster" scripts/lint-prose.sh
+check "fix on lefthook" fail "fix(hooks): order" lefthook.yml
+check "fix on dev tooling" fail "fix(deps): bump biome" package.json bun.lock
+check "breaking feat on docs" fail "feat!: rewrite" CONTRIBUTING.md
+check "fix on the Dockerfile" pass "fix(deps): bump alpine" Dockerfile
+check "feat on dockerignore" pass "feat: trim context" .dockerignore
+check "one logic path among docs" pass "fix: package" README.md Dockerfile
+check "docs on a doc" pass "docs: typo" README.md
+check "ci on workflow" pass "ci: cache" .github/workflows/ci.yml
+check "chore on the Dockerfile" pass "chore: tidy" Dockerfile
+check "merge commit" pass "Merge pull request #1 from x/y" README.md
+check "no paths" pass "fix: empty"
+
+exit $fail
