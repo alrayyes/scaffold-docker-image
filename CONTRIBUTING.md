@@ -98,6 +98,27 @@ does not parse gets no changelog entry and moves no version.
   biome should not republish a byte-identical container — and it is why a base
   image bump is configured to raise `fix(deps):` instead.
 
+Only a change to what ships should release, and the commit type is the lever.
+In this repo the logic paths are the `Dockerfile` and `.dockerignore`, plus any
+file the `Dockerfile` copies in. Prose, tests, CI and hook config, linter
+config, `package.json` (dev tooling only) and `bun.lock` are not. So:
+
+- A `feat:`, `fix:` or `perf:` commit touches at least one logic path.
+  Otherwise type it `docs:`, `test:`, `ci:`, `build:` or `chore:`.
+- `.ci/check-release-type` enforces that in the `commit-msg` hook, on every
+  commit in CI, and on the pull request title in the `pr-title` workflow, since
+  a squash merge lands the title and not the commits. Its cases are in
+  `.ci/test-check-release-type`.
+- release-please's `exclude-paths` backs it up for `.github/`, `.claude/`,
+  `.ci/`, `openspec/`, `scripts/` and `styles/`. It takes directory prefixes
+  only: a glob or a root file such as `README.md` never matches, checked
+  against release-please 17.11.2's source. A commit that mixes an excluded
+  directory with any other file still releases. So the commit type has to
+  carry the rest.
+
+If you add a `COPY` to the `Dockerfile`, add the path it copies to
+`.ci/check-release-type`.
+
 One logical change per commit, each building and passing its own tests. A
 refactor and a feature are two commits.
 
