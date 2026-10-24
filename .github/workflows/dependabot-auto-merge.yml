@@ -1,13 +1,13 @@
-# Dependabot has no built-in `automerge: true` the way Renovate does. This is
-# that mechanism for a GitHub-primary repo: gate on the actor, wait for the
-# same checks every other pull request waits for, then arm auto-merge the
-# same way a human would from the UI.
+# Dependabot has no built-in `automerge: true`. This is that mechanism: gate
+# on the actor, wait for the same checks every other pull request waits for,
+# then arm auto-merge the same way a human would from the UI.
 #
 # pull_request_target, not pull_request: this step needs RELEASE_TOKEN (see
 # below), and GitHub never passes repository secrets — anything but the
 # default GITHUB_TOKEN — into a pull_request run opened by Dependabot, to
 # stop a malicious dependency update from exfiltrating them. Confirmed live
-# on PR #58, where GH_TOKEN came through empty and the merge step failed.
+# on a Dependabot pull request in the repo this template was cut from, where
+# GH_TOKEN came through empty and the merge step failed.
 # pull_request_target runs in the base repo's context instead, which does
 # get secrets, and it's safe here specifically because Dependabot's pull
 # requests come from a branch on this repo, never a fork — there's no

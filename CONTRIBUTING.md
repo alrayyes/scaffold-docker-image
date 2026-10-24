@@ -130,7 +130,9 @@ Branch, push, open a pull request — nothing lands on `main` directly. Read you
 own diff first; if it carries two changes, say so at the top of the description
 rather than leaving it to be found.
 
-Label it: a `kind/` for what it is and a `topic/` for the area it touches.
+Label it from GitHub's stock set: `bug` for a fix, `enhancement` for a new
+capability, `documentation` for prose. Use `gh label list` to see what the
+repo has.
 
 Spend the description on **why**. The diff already says what.
 
