@@ -81,6 +81,10 @@ run is that showing up. GitHub emails whoever last edited the schedule, and the
 run is on the Actions tab. The step lives in `.github/actions/build-and-smoke/`
 so this and the pull request build can't drift.
 
+GitHub disables a scheduled workflow in a public repo after 60 days without
+repository activity. A push, or enabling it again on the Actions tab, starts it
+back up.
+
 ## Commits
 
 [Conventional Commits](https://www.conventionalcommits.org/), enforced by
