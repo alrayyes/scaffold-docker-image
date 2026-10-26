@@ -6,7 +6,7 @@
   and runs the hooks; there is no node in this repo any more.
 - **Docker**, to build the image and to run hadolint.
 - **gitleaks**, which the hooks run to scan for secrets. Install it from your
-  package manager; CI uses the pinned image in `.github/workflows/gitleaks.yml`.
+  package manager; CI uses the image pinned in `.github/gitleaks/Dockerfile`.
 
 That is the whole toolchain. Everything else arrives through `bun install`.
 
