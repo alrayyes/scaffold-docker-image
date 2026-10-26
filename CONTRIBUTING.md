@@ -5,6 +5,8 @@
 - **bun** `1.3.14`, pinned in `.bun-version`. It installs the dev dependencies
   and runs the hooks; there is no node in this repo any more.
 - **Docker**, to build the image and to run hadolint.
+- **gitleaks**, which the hooks run to scan for secrets. Install it from your
+  package manager; CI uses the pinned image in `.github/workflows/gitleaks.yml`.
 
 That is the whole toolchain. Everything else arrives through `bun install`.
 
@@ -30,6 +32,7 @@ bun run format:check        # prettier: Markdown and YAML layout
 bun run lint:md             # markdownlint: structure, links, heading levels
 bun run lint:mechanics      # ltex: grammar and spelling
 bun run lint:prose          # vale: house style
+gitleaks git --redact --no-banner  # secrets, across the whole history
 
 docker run --rm -i -v "$PWD/.hadolint.yaml:/.hadolint.yaml:ro" hadolint/hadolint:v2.15.1-alpine@sha256:a1d49ae1a4e83c1dbad26b8c1ad7588c8bd1e04f4866b34ad3cac50335198552 hadolint --config /.hadolint.yaml - < Dockerfile
 docker build .
@@ -52,12 +55,12 @@ arguments (`bun run format README.md`), which is how the hook calls them.
 The hooks run the same commands, which is the point — they cannot drift from CI
 if there is one copy of each:
 
-- **pre-commit** judges only what the commit contains: every job is handed the
-  staged files, so a half-finished file elsewhere can't fail or be rewritten by
-  a commit. It formats them with biome and Prettier and restages what they
-  touched, then runs markdownlint, and hadolint on a staged `Dockerfile` (read
-  from the index). It may write, and it builds the image when the `Dockerfile`
-  is staged.
+- **pre-commit** judges only what the commit contains: gitleaks scans the
+  index, and every other job is handed the staged files, so a half-finished
+  file elsewhere can't fail or be rewritten by a commit. It formats them with
+  biome and Prettier and restages what they touched, then runs markdownlint,
+  and hadolint on a staged `Dockerfile` (read from the index). It may write,
+  and it builds the image when the `Dockerfile` is staged.
 - **commit-msg** runs commitlint.
 - **pre-push** runs everything in check mode over the whole tree, including the
   two prose tiers. It never writes: a hook rewriting files under a push leaves

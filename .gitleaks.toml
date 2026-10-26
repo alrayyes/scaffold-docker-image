@@ -1,0 +1,12 @@
+# Secret scanning for this repository.
+#
+# This extends the ruleset that ships with the pinned gitleaks version rather
+# than replacing it, so new upstream rules arrive with the version bump instead
+# of having to be copied in by hand.
+#
+# Nothing is allowlisted yet. A repo generated from this scaffold that needs an
+# entry adds it here, with a comment saying why, rather than reaching for an
+# inline ignore comment.
+
+[extend]
+useDefault = true
