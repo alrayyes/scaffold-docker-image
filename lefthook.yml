@@ -18,9 +18,13 @@ commit-msg:
 # fetched. After that a run over this repo's five documents is seconds, which is
 # cheap for something paid once a branch and far cheaper than finding a
 # misspelt product name from a red pipeline.
+#
+# gitleaks scans the whole history rather than the unpushed range: it takes a
+# second or two at this size, and CI does the same.
 pre-push:
   parallel: true
   jobs:
+    - run: gitleaks git --redact --no-banner
     - run: bun run lint
     - run: bun run lint:pkg
     - run: bun run check:biome-schema
@@ -47,6 +51,7 @@ pre-push:
 pre-commit:
   parallel: false
   jobs:
+    - run: gitleaks git --staged --redact --no-banner
     - run: bun run lint:fix {staged_files}
       glob: "*.{js,jsx,ts,tsx,mjs,cjs,json,jsonc,css}"
       stage_fixed: true
