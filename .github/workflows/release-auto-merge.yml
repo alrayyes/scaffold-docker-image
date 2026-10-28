@@ -27,7 +27,10 @@ permissions:
 
 concurrency:
   group: release-auto-merge-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  # false: the opened run skips (no label yet) and the labeled run lands
+  # a second later in the same group. No later event should be able to
+  # cancel the run that arms auto-merge.
+  cancel-in-progress: false
 
 jobs:
   auto-merge:
