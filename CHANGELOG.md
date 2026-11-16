@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/alrayyes/scaffold-docker-image/compare/0.1.1...0.1.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** bump alpine from 3.24.3 to 3.24.4 ([#29](https://github.com/alrayyes/scaffold-docker-image/issues/29)) ([37234ef](https://github.com/alrayyes/scaffold-docker-image/commit/37234ef824f146977b59823e3a441b949304f1d3))
+
 ## [0.1.1](https://github.com/alrayyes/scaffold-docker-image/compare/0.1.0...0.1.1) (2026-10-26)
 
 
