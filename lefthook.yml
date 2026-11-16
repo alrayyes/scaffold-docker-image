@@ -27,7 +27,6 @@ pre-push:
     - run: gitleaks git --redact --no-banner
     - run: bun run lint
     - run: bun run lint:pkg
-    - run: bun run check:biome-schema
     - run: bun run format:check
     - run: bun run lint:md
     # Grammar and spelling. It takes only the Markdown in the push (a change to

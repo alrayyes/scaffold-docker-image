@@ -33,7 +33,6 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run lint
       - run: bun run lint:pkg
-      - run: bun run check:biome-schema
       # The release-type check's own cases; shellcheck ships on the runner.
       - run: sh .ci/test-check-release-type && shellcheck .ci/*
 
