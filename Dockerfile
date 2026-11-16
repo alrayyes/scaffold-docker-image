@@ -1,6 +1,6 @@
 # Digest-pinned, so a rebuild reproduces what was scanned. Dependabot's Docker
 # updater reads this line and raises the pull request when either moves.
-FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
 # Replace this with what the image is for. Deliberately unpinned: an apk version
 # belongs to the Alpine branch the base is built on, and only the digest above gets
